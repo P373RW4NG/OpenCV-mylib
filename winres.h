@@ -1,6 +1,9 @@
 #ifndef WINRES_H
 #define WINRES_H
-
+/*
+Objective: Get screen resolusion
+Platform: Windows
+*/
 #include <wtypes.h>
 #include <iostream>
 using namespace std;
