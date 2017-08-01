@@ -1,6 +1,8 @@
 #ifndef PLOTIMGS_H
 #define PLOTIMGS_H
-
+/*
+Objective: Plot several images in one picture
+/*
 #include <stdarg.h>
 #include <cmath>
 #include "opencv2/core/core.hpp"
