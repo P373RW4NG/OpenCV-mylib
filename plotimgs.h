@@ -8,10 +8,12 @@ Objective: Plot several images in one picture
 #include "opencv2/core/core.hpp"
 
 // This function can be called like this:
-// img = subplot(1, 0.8, %img)
-// img = subplot(3, 0.5, %img1, %img2, %img3)
-// cv::imshow("figure.1", subplot(2, 0.5, %img, %img2))
-//
+// img = subplot(1, 0.8, &img)
+// or
+// img = subplot(3, 0.5, &img1, &img2, &img3)
+// or
+// cv::imshow("figure.1", subplot(2, 0.5, &img, &img2))
+// 
 // No input image number limit
 // No auto output image rescaling (add in the future)
 
