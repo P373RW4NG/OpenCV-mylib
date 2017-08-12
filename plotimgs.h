@@ -16,6 +16,7 @@ Objective: Plot several images in one picture
 // 
 // No input image number limit
 // No auto output image rescaling (add in the future)
+// Input images require same dimension 
 
 cv::Mat subplot(int n, double scl, ...){
     int w=3, h=(n%w>0)? (n/w)+1 : n/w;
