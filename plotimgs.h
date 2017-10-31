@@ -20,27 +20,31 @@
 
 /* Objective: Plot several images in one figure
  *
- * cv::Mat subplot(const int n, double scl = 1.0, ...)
+ * cv::Mat subplot(const int n, const int resRow, const int resCol, double scl = 1.0, ...)
  *
  * Parameters:
  * n: number of input images
+ * resRow: number of images in the vertical direction of output grid
+ * resCol: number of images in the horizontal direction of output grid
  * scl: scaling factor of output image
  *
  * Example:
- * 1. result = subplot(1, 0.8, &img) // copy a image which has scale ratio of 0.8 of original image
- * 2. img = subplot(3, 0.5, &img1, &img2, &img3) // merge three images with half of height and width
- * 3. cv::imshow("figure.1", subplot(2, 0.5, &img, &img2)) // display two images in one window with half of its original size
+ * 1. result = subplot(1, 1, 1, 2, &img) // copy an image and scales it to twice of the size
+ * 2. img = subplot(3, 1, 3, 0.5, &img1, &img2, &img3) // merge three images
+ * 3. cv::imshow("figure.1", subplot(2, 1, 2, 0.5, &img, &img2)) // display two images in one window and scales it to half of its original size
  *
- * void showImages(char* win_name, const int n, double scl, int msec, ...)
+ * void showImages(char* win_name, const int n, const int resRow, const int resCol, double scl, int msec, ...)
  *
  * Parameters:
  * win_name: name of the window
  * n: number of input images
+ * resRow: number of images in the vertical direction of output grid
+ * resCol: number of images in the horizontal direction of output grid
  * scl: scaling factor of output image
  * msec: waits for a pressed key (in milliseconds). msec = 0 means forever, msec < 0 means disable.
  *
  * Example:
- * 1. showImages("pic.1", 2, 1, &sobel, &laplacian)
+ * 1. showImages("pic.1", 2, 1, 1, 1, 0, &sobel, &laplacian)
  *
  */
 
@@ -97,31 +101,52 @@ public:
     void printSize(){ std::cout<<"Screen resolusion: "<<width<<'*'<<height<<'*'<<channel<<std::endl; }
 };
 
-cv::Mat subplot(const int n, double scl = 1.0, ...){
-    int w=3, h=(n%w>0)? (n/w)+1 : n/w;
-    if(n<w){
-        w=n;
-    }
-    if(fmod(n,sqrt(n))==0 && n>1){
-        w=sqrt(n), h=sqrt(n);
-    }
+cv::Mat subplot(const int n, const int resRow, const int resCol, double scl = 1.0, ...){
+
     va_list va;
     va_start(va, scl);
     //std::cout<<h<<std::endl;
     cv::Mat *img, ROI, res;
     img = va_arg(va, cv::Mat*);
+    int ctr=0;
 
-    if(img->channels()==1){
-        res = cv::Mat(h*img->rows, w*img->cols, CV_8UC1, cv::Scalar::all(0));
-    }else if(img->channels()==3){
-        res = cv::Mat(h*img->rows, w*img->cols, CV_8UC3, cv::Scalar::all(0));
-    }
-    for(int j=0; j<h; j++){
-        if(j==h-1) w = (n%w>0)? n%w : w;
-        for(int i=0; i<w; i++){
-            ROI = res(cv::Rect((img->cols)*i, (img->rows)*j, img->cols,img->rows));
-            img->copyTo(ROI);
-            img = va_arg(va, cv::Mat*);
+
+    if(resRow<=0 && resCol<=0){
+        int w=3, h=(n%w>0)? (n/w)+1 : n/w;
+        if(n<w){
+            w=n;
+        }
+        if(fmod(n,sqrt(n))==0 && n>1){
+            w=sqrt(n), h=sqrt(n);
+        }
+
+        if(img->channels()==1){
+            res = cv::Mat(h*img->rows, w*img->cols, CV_8UC1, cv::Scalar::all(0));
+        }else if(img->channels()==3){
+            res = cv::Mat(h*img->rows, w*img->cols, CV_8UC3, cv::Scalar::all(0));
+        }
+
+        for(int j=0; j<h; j++){
+            if(j==h-1) w = (n%w>0)? n%w : w;
+            for(int i=0; i<w; i++){
+                ROI = res(cv::Rect((img->cols)*i, (img->rows)*j, img->cols,img->rows));
+                img->copyTo(ROI);
+                img = va_arg(va, cv::Mat*);
+            }
+        }
+    }else if(resRow >0 && resCol >0){
+        if(img->channels()==1){
+            res = cv::Mat(resRow*img->rows, resCol*img->cols, CV_8UC1, cv::Scalar::all(0));
+        }else if(img->channels()==3){
+            res = cv::Mat(resRow*img->rows, resCol*img->cols, CV_8UC3, cv::Scalar::all(0));
+        }
+        for(int r=0; r<resRow && ctr<n; r++){
+            for(int c=0; c<resCol && ctr<n; c++){
+                ROI = res(cv::Rect((img->cols)*c, (img->rows)*r, img->cols,img->rows));
+                img->copyTo(ROI);
+                img = va_arg(va, cv::Mat*);
+                ctr++;
+            }
         }
     }
     va_end(va);
@@ -129,33 +154,54 @@ cv::Mat subplot(const int n, double scl = 1.0, ...){
     return res;
 }
 
-void showImages(char* win_name, const int n, double scl, int msec, ...){
-    int w=3, h=(n%w>0)? (n/w)+1 : n/w;
-    if(n<w){
-        w=n;
-    }
-    if(fmod(n,sqrt(n))==0 && n>1){
-        w=sqrt(n), h=sqrt(n);
-    }
+void showImages(char* win_name, const int n, const int resRow, const int resCol, double scl, int msec, ...){
+
     va_list va;
     va_start(va, msec);
     //std::cout<<h<<std::endl;
     cv::Mat *img, ROI, res;
     img = va_arg(va, cv::Mat*);
+    int ctr=0;
 
-    if(img->channels()==1){
-        res = cv::Mat(h*img->rows, w*img->cols, CV_8UC1, cv::Scalar::all(0));
-    }else if(img->channels()==3){
-        res = cv::Mat(h*img->rows, w*img->cols, CV_8UC3, cv::Scalar::all(0));
-    }
-    for(int j=0; j<h; j++){
-        if(j==h-1) w = (n%w>0)? n%w : w;
-        for(int i=0; i<w; i++){
-            ROI = res(cv::Rect((img->cols)*i, (img->rows)*j, img->cols,img->rows));
-            img->copyTo(ROI);
-            img = va_arg(va, cv::Mat*);
+    if(resRow<=0 && resCol<=0){
+        int w=3, h=(n%w>0)? (n/w)+1 : n/w;
+        if(n<w){
+            w=n;
+        }
+        if(fmod(n,sqrt(n))==0 && n>1){
+            w=sqrt(n), h=sqrt(n);
+        }
+
+        if(img->channels()==1){
+            res = cv::Mat(h*img->rows, w*img->cols, CV_8UC1, cv::Scalar::all(0));
+        }else if(img->channels()==3){
+            res = cv::Mat(h*img->rows, w*img->cols, CV_8UC3, cv::Scalar::all(0));
+        }
+
+        for(int j=0; j<h; j++){
+            if(j==h-1) w = (n%w>0)? n%w : w;
+            for(int i=0; i<w; i++){
+                ROI = res(cv::Rect((img->cols)*i, (img->rows)*j, img->cols,img->rows));
+                img->copyTo(ROI);
+                img = va_arg(va, cv::Mat*);
+            }
+        }
+    }else if(resRow >0 && resCol >0){
+        if(img->channels()==1){
+            res = cv::Mat(resRow*img->rows, resCol*img->cols, CV_8UC1, cv::Scalar::all(0));
+        }else if(img->channels()==3){
+            res = cv::Mat(resRow*img->rows, resCol*img->cols, CV_8UC3, cv::Scalar::all(0));
+        }
+        for(int r=0; r<resRow && ctr<n; r++){
+            for(int c=0; c<resCol && ctr<n; c++){
+                ROI = res(cv::Rect((img->cols)*c, (img->rows)*r, img->cols,img->rows));
+                img->copyTo(ROI);
+                img = va_arg(va, cv::Mat*);
+                ctr++;
+            }
         }
     }
+
     va_end(va);
     cv::resize(res, res, cv::Size(), scl, scl, CV_INTER_AREA);
     cv::namedWindow(win_name);
