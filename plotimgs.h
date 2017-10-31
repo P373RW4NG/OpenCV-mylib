@@ -29,9 +29,12 @@
  * scl: scaling factor of output image
  *
  * Example:
- * 1. result = subplot(1, 1, 1, 2, &img) // copy an image and scales it to twice of the size
- * 2. img = subplot(3, 1, 3, 0.5, &img1, &img2, &img3) // merge three images
- * 3. cv::imshow("figure.1", subplot(2, 1, 2, 0.5, &img, &img2)) // display two images in one window and scales it to half of its original size
+ * 1. Copy an image and scale it to twice of the size
+ *    result = subplot(1, 1, 1, 2, &img) 
+ * 2. Merge three images and scale it to half of the height and width
+ *    img = subplot(3, 1, 3, 0.5, &img1, &img2, &img3)
+ * 3. Display two images in one window and scale it to half of its original size
+ *    cv::imshow("figure.1", subplot(2, 1, 2, 0.5, &img, &img2))
  *
  * void showImages(char* win_name, const int n, const int resRow, const int resCol, double scl, int msec, ...)
  *
@@ -44,7 +47,8 @@
  * msec: waits for a pressed key (in milliseconds). msec = 0 means forever, msec < 0 means disable.
  *
  * Example:
- * 1. showImages("pic.1", 2, 1, 1, 1, 0, &sobel, &laplacian)
+ * 1. Display two images side-by-side and close window after 3 seconds
+ *    showImages("pic.1", 2, 1, 2, 1, 3000, &sobel, &laplacian)
  *
  */
 
