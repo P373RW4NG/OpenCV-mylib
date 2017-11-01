@@ -77,7 +77,7 @@ public:
     winRes(int w, int h): width(w), height(h){}
     ~winRes(){}
     void printSize(){
-        std::cout<<"Screen resolusion: "<<width<<'*'<<height<<std::endl;
+        std::cout<<"Screen resolution: "<<width<<'*'<<height<<std::endl;
     }
 private:
     #if defined _WIN32
@@ -102,7 +102,7 @@ public:
     ~imgSize(){}
     int height, width, channel;
     int area(){ return height*width; }
-    void printSize(){ std::cout<<"Screen resolusion: "<<width<<'*'<<height<<'*'<<channel<<std::endl; }
+    void printSize(){ std::cout<<"Screen resolution: "<<width<<'*'<<height<<'*'<<channel<<std::endl; }
 };
 
 cv::Mat subplot(const int n, const int resRow, const int resCol, double scl = 1.0, ...){
