@@ -53,9 +53,9 @@
  */
 
 class winRes{
-public:
     int height;
     int width;
+public:
     winRes(){
 #if defined _WIN32
         GetDesktopResolution(this);
@@ -79,6 +79,8 @@ public:
     void printSize(){
         std::cout<<"Screen resolution: "<<width<<'*'<<height<<std::endl;
     }
+    int const Height(){ return height; }
+    int const Width(){ return width; }
 private:
     #if defined _WIN32
     void GetDesktopResolution(winRes* screen)
