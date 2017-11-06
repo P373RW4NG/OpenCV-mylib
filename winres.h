@@ -4,8 +4,18 @@
 Objective: Get screen resolusion
 Platform: Windows
 */
-#include <wtypes.h>
+
 #include <iostream>
+#include <opencv2/core/core.hpp>
+
+#ifdef _WIN32
+#include <wtypes.h>
+#elif defined __APPLE__ || __MACH__
+#include <ApplicationServices/ApplicationServices.h>
+#elif defined __linux__
+#include <X11/Xlib.h>
+#endif
+
 using namespace std;
 
 
@@ -34,10 +44,11 @@ public:
     winRes(int w, int h): width(w), height(h){}
     ~winRes(){}
     void printSize(){
-        std::cout<<"Screen resolution: "<<width<<'*'<<height<<std::endl;
+        std::cout<<"Screen resolution(WxH): "<<width<<'*'<<height<<std::endl;
     }
     int const Height(){ return height; }
     int const Width(){ return width; }
+    int const area(){ return height*width; }
 private:
     #if defined _WIN32
     void GetDesktopResolution(winRes* screen)
@@ -58,10 +69,16 @@ private:
 class imgSize{
 public:
     imgSize():height(0), width(0), channel(0){}
+    imgSize(int h, int w, int c):height(h), width(w), channel(c){}
+    imgSize(cv::Mat img): height(img.rows), width(img.cols), channel(img.channels()) {}
     ~imgSize(){}
     int height, width, channel;
-    int area(){ return height*width; }
-    void printSize(){ std::cout<<"Screen resolution: "<<width<<'*'<<height<<'*'<<channel<<std::endl; }
+    int const area(){ return height*width; }
+    void printSize(){
+        if(channel<=0){
+            throw "empty image data";
+        }else{ std::cout<<"Screen resolution(WxHxD): "<<width<<'*'<<height<<'*'<<channel<<std::endl; }
+    }
 };
 
 #endif // WINRES_H
