@@ -70,6 +70,7 @@ class imgSize{
 public:
     imgSize():height(0), width(0), channel(0){}
     imgSize(int h, int w, int c):height(h), width(w), channel(c){}
+    imgSize(winRes win): height(win.Height()), width(win.Width()), channel(3){}
     imgSize(cv::Mat img): height(img.rows), width(img.cols), channel(img.channels()) {}
     ~imgSize(){}
     int height, width, channel;
