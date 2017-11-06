@@ -77,7 +77,7 @@ public:
     int const area(){ return height*width; }
     void printSize(){
         if(channel<=0){
-            throw "empty image data";
+            throw "empty image data (channel <= 0)";
         }else{ std::cout<<"Screen resolution(WxHxD): "<<width<<'*'<<height<<'*'<<channel<<std::endl; }
     }
 };
