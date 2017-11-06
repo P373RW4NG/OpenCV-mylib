@@ -1,4 +1,7 @@
 # OpenCV-mylib
 
-Qt .pro
->LIBS += -framework ApplicationServices
+macOS
+>Qt .pro
+>>LIBS += -framework ApplicationServices
+>gcc
+>> -framework ApplicationServices
