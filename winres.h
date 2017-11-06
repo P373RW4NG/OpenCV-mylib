@@ -1,8 +1,8 @@
 #ifndef WINRES_H
 #define WINRES_H
 /*
-Objective: Get screen resolusion
-Platform: Windows
+Objective: Get screen resolution
+Platform: Windows, Linux, macOS
 */
 
 #include <iostream>
