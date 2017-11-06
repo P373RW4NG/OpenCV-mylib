@@ -10,15 +10,6 @@
 #include <iostream>
 #include "winres.h"
 
-#ifdef _WIN32
-#include <wtypes.h>
-#elif defined __APPLE__ || __MACH__
-#include <ApplicationServices/ApplicationServices.h>
-#elif defined __linux__
-#include <X11/Xlib.h>
-#endif
-
-
 /* Objective: Plot several images in one figure
  *
  * cv::Mat subplot(const int n, const int resRow, const int resCol, double scl = 1.0, ...)
