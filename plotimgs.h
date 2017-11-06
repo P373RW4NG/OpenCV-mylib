@@ -8,15 +8,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
-
-#ifdef _WIN32
-#include <wtypes.h>
-#elif defined __APPLE__ || __MACH__
-#include <ApplicationServices/ApplicationServices.h>
-#elif defined __linux__
-#include <X11/Xlib.h>
-#endif
-
+#include "winres.h"
 
 /* Objective: Plot several images in one figure
  *
@@ -51,61 +43,6 @@
  *    showImages("pic.1", 2, 1, 2, 1, 3000, &sobel, &laplacian)
  *
  */
-
-class winRes{
-    int height;
-    int width;
-public:
-    winRes(){
-#if defined _WIN32
-        GetDesktopResolution(this);
-#elif defined __APPLE__ || __MACH__
-        CGDirectDisplayID id = CGMainDisplayID();
-        width = CGDisplayPixelsHigh(id);
-        height = CGDisplayPixelsWide(id);
-#elif defined __linux__
-        Display* disp = XOpenDisplay(NULL);
-        //Screen* scrn = DefaultScreenOfDisplay(disp);
-        //width = scrn->width;
-        //height = scrn->height;
-        //Display *display = XGetMainDisplay(NULL);
-        const int scrn = DefaultScreen(disp);
-        width = DisplayWidth(disp, scrn);
-        height = DisplayHeight(disp, scrn);
-#endif
-    }
-    winRes(int w, int h): width(w), height(h){}
-    ~winRes(){}
-    void printSize(){
-        std::cout<<"Screen resolution: "<<width<<'*'<<height<<std::endl;
-    }
-    int const Height(){ return height; }
-    int const Width(){ return width; }
-private:
-    #if defined _WIN32
-    void GetDesktopResolution(winRes* screen)
-    {
-       RECT desktop;
-       // Get a handle to the desktop window
-       const HWND hDesktop = GetDesktopWindow();
-       // Get the size of screen to the variable desktop
-       GetWindowRect(hDesktop, &desktop);
-       // The top left corner will have coordinates (0,0)
-       // and the bottom right corner will have coordinates
-       screen->width = desktop.right;
-       screen->height = desktop.bottom;
-    }
-#endif
-};
-
-class imgSize{
-public:
-    imgSize():height(0), width(0), channel(0){}
-    ~imgSize(){}
-    int height, width, channel;
-    int area(){ return height*width; }
-    void printSize(){ std::cout<<"Screen resolution: "<<width<<'*'<<height<<'*'<<channel<<std::endl; }
-};
 
 cv::Mat subplot(const int n, const int resRow, const int resCol, double scl = 1.0, ...){
 
