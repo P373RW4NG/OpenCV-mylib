@@ -2,7 +2,7 @@
 
 macOS
 >Qt .pro
->>LIBS += -framework ApplicationServices
+  LIBS += -framework ApplicationServices
 
 >gcc
 >> -framework ApplicationServices
