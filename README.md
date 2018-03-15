@@ -10,4 +10,4 @@
 
 Example:
 showImages("HOG", 4, 1, 4, 0.5, 0, &img, &gammaNormalize, &sobelEdge, &HOG);
-![hog](https://user-images.githubusercontent.com/29127069/37355665-3d9fc4c4-271f-11e8-98df-37f86db83039.png?raw=true)
+![hog](https://user-images.githubusercontent.com/29127069/37452922-07f5b7c2-2871-11e8-94e3-1402e39946f4.png?raw=true)
